@@ -21,7 +21,7 @@ class MarcaController extends Controller
     public function index()
     {
         $marcas = $this->marca->all();
-        return $marcas;
+        return response($marcas,Response::HTTP_OK);
     }
 
     /**
@@ -54,7 +54,7 @@ class MarcaController extends Controller
             //Response::HTTP_NOT_FOUND;//response()->json(['erro' => 'Recurso pesquisado não existe'],);
         }
 
-        return $marca;
+        return response($marca,Response::HTTP_OK);
     }
 
     /**
@@ -75,7 +75,7 @@ class MarcaController extends Controller
             return response(['erro' => 'Impossível realizar a atualização. O recurso pesquisado não existe'],Response::HTTP_NOT_FOUND);
         }
         $marca->updade($request->all());
-        return $marca;
+        return response($marca,Response::HTTP_OK);
     }
 
     /**
@@ -88,6 +88,6 @@ class MarcaController extends Controller
             return response(['erro' => 'Impossível realizar a exclusão. O recurso pesquisado não existe'],Response::HTTP_NOT_FOUND);
         }
         $marca->delete();
-        return ['msg'=>'A marca foi removida com sucesso'];
+        return response($marca,Response::HTTP_OK);
     }
 }
