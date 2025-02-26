@@ -37,7 +37,13 @@ class MarcaController extends Controller
      */
     public function store(StoreMarcaRequest $request)
     {
-        //$marca = Marca::create($request->all());
+        $regras = [];
+
+        $feedback = [];
+
+        $request->validate(StoreMarcaRequest::rule());
+
+
         $marca = $this->marca->create($request->all());
         return response($marca,Response::HTTP_CREATED);
     }

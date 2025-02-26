@@ -22,7 +22,8 @@ class StoreMarcaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'nome' => 'required|unique:marca',
+            'imagem' => 'required'
         ];
     }
 }
