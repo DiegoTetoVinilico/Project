@@ -22,8 +22,16 @@ class StoreMarcaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => 'required|unique:marca',
+            'nome' => 'required|unique:marcas',
             'imagem' => 'required'
+        ];
+    }
+    public function messages(): array
+    {
+        return [
+            'nome.required' => 'O campo nome é obrigatorio',
+            'nome.unique' => 'O campo nome da marca ja existe',
+            'imagem.required' => 'O campo imagem é obrigatorio',
         ];
     }
 }
