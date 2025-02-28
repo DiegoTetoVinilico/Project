@@ -74,12 +74,16 @@ class MarcaController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateMarcaRequest $request, $id)
-    {
+    {   
+        $validated = $request->validated();
+        
         $marca = $this->marca->find($id);
         if($marca === null){
             return response(['erro' => 'Impossível realizar a atualização. O recurso pesquisado não existe'],Response::HTTP_NOT_FOUND);
         }
-        $marca->update($request->all());
+
+        $marca->update($validated);
+    
         return response($marca,Response::HTTP_OK);
     }
 
