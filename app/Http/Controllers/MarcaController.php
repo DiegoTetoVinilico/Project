@@ -37,27 +37,14 @@ class MarcaController extends Controller
      */
     public function store(StoreMarcaRequest $request)
     {
-        $regras = [
-            'nome' => 'required|unique:marcas',
-            'imagem' => 'required',
-        ];
 
-        $feedback = [
-            'required' => 'O campo :attribute é obrigatorio',
-            'nome.unique' => 'O nome da marca já existe'
-        ];
-
-
-        $request->validate($regras, $feedback);
-        
+        $validated = $request->validated();
         #Stateless
         /*No caso de não passar na validação, ocorre o Stateless (Sem estado).
         Não mantém informações sobre o estado de uma conexão ou sessão.
         Por padrão, o usuário será redirecionado para a rota padrão
         */
-
-
-        $marca = $this->marca->create($request->all());
+        $marca = $this->marca->create($validated);
         return response($marca,Response::HTTP_CREATED);
     }
 
@@ -88,12 +75,16 @@ class MarcaController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateMarcaRequest $request, $id)
-    {
+    {   
+        $validated = $request->validated();
+        
         $marca = $this->marca->find($id);
         if($marca === null){
             return response(['erro' => 'Impossível realizar a atualização. O recurso pesquisado não existe'],Response::HTTP_NOT_FOUND);
         }
-        $marca->updade($request->all());
+
+        $marca->update($validated);
+    
         return response($marca,Response::HTTP_OK);
     }
 
