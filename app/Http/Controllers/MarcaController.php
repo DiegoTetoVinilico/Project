@@ -37,11 +37,24 @@ class MarcaController extends Controller
      */
     public function store(StoreMarcaRequest $request)
     {
-        $regras = [];
+        $regras = [
+            'nome' => 'required|unique:marcas',
+            'imagem' => 'required',
+        ];
 
-        $feedback = [];
+        $feedback = [
+            'required' => 'O campo :attribute é obrigatorio',
+            'nome.unique' => 'O nome da marca já existe'
+        ];
 
-        $request->validate(StoreMarcaRequest::rule());
+
+        $request->validate($regras, $feedback);
+        
+        #Stateless
+        /*No caso de não passar na validação, ocorre o Stateless (Sem estado).
+        Não mantém informações sobre o estado de uma conexão ou sessão.
+        Por padrão, o usuário será redirecionado para a rota padrão
+        */
 
 
         $marca = $this->marca->create($request->all());
