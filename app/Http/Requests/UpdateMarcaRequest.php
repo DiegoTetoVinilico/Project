@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateMarcaRequest extends FormRequest
 {
@@ -20,15 +21,29 @@ class UpdateMarcaRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-        return [
-            'nome' => [ 'required',
-                        'min:3',
-                        'max:100',
-                        'unique:marcas'
-                    ],
-            'imagem' => 'required'
-        ];
+    {  
+        $rules = [
+                    'nome' => [ 'required',
+                                'min:3',
+                                'max:100',
+                            ],
+                    Rule::unique('Marcas', 'nome')->ignore($this->id),
+                    'imagem' => 'required'
+                ];
+
+        if ($this->method()=="PATCH") {
+            $regrasDinamicas = array();
+
+            foreach ($rules as $input => $regra) { 
+                  if(array_key_exists($input, $this->request->all())){
+                        $regrasDinamicas[$input] = $regra;
+                  }
+            }
+            return $regrasDinamicas;
+        }else{
+
+        return $rules;
+        }
     }
     public function messages(): array
     {
