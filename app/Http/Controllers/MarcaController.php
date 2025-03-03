@@ -44,7 +44,19 @@ class MarcaController extends Controller
         Não mantém informações sobre o estado de uma conexão ou sessão.
         Por padrão, o usuário será redirecionado para a rota padrão
         */
-        $marca = $this->marca->create($validated);
+        // Verifica se o arquivo de imagem foi enviado
+        if (!$request->hasFile('imagem')) {
+         return response(['message' => 'Nenhuma imagem foi enviada.'], Response::HTTP_BAD_REQUEST);
+        }
+        
+        $imagem = $request->file('imagem');
+        $imagem_urn = $imagem->store('imagens', 'public');
+
+        $marca = $this->marca->create([
+                                        'nome' => $validated['nome'],
+                                        'imagem' => $imagem_urn,
+                                        ]);
+
         return response($marca,Response::HTTP_CREATED);
     }
 
