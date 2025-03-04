@@ -42,4 +42,11 @@ class StoreMarcaRequest extends FormRequest
             'imagem.mimes' => 'A imagem deve ser do tipo: jpeg, png, jpg ou gif',
         ];
     }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'imagem' => $this->imagem ?? null, // Garante que o campo 'imagem' esteja presente
+        ]);
+    }
 }

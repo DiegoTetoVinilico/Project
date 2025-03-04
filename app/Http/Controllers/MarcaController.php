@@ -44,17 +44,11 @@ class MarcaController extends Controller
         Não mantém informações sobre o estado de uma conexão ou sessão.
         Por padrão, o usuário será redirecionado para a rota padrão
         */
-        // Verifica se o arquivo de imagem foi enviado
-        if (!$request->hasFile('imagem')) {
-         return response(['message' => 'Nenhuma imagem foi enviada.'], Response::HTTP_BAD_REQUEST);
-        }
-        
-        $imagem = $request->file('imagem');
-        $imagem_urn = $imagem->store('imagens', 'public');
+        $imagem_urn = $request->file('imagem')->store('imagens', 'public');
 
         $marca = $this->marca->create([
                                         'nome' => $validated['nome'],
-                                        'imagem' => $imagem_urn,
+                                        'imagem' => $imagem_urn
                                         ]);
 
         return response($marca,Response::HTTP_CREATED);
@@ -89,7 +83,8 @@ class MarcaController extends Controller
     public function update(UpdateMarcaRequest $request, $id)
     {   
         $validated = $request->validated();
-        
+    
+
         $marca = $this->marca->find($id);
         if($marca === null){
             return response(['erro' => 'Impossível realizar a atualização. O recurso pesquisado não existe'],Response::HTTP_NOT_FOUND);
