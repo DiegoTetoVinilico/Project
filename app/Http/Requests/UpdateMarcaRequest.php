@@ -22,13 +22,12 @@ class UpdateMarcaRequest extends FormRequest
      */
     public function rules(): array
     {  
-        $id = $this->route("marca");
         $rules = [
             'nome' => [
                 'required', // O campo 'nome' é opcional no PATCH
                 'min:3',
                 'max:100',
-                'unique:marcas,nome, ' . $id . '' // Ignora o próprio registro
+                Rule::unique('marcas', 'nome')->ignore($this->id), // Ignora o próprio registro
             ],
             'imagem' => 'required|image|mimes:jpeg,png,jpg,gif', // O campo 'imagem' é opcional no PATCH
         ];

@@ -46,10 +46,10 @@ class MarcaController extends Controller
         Por padrão, o usuário será redirecionado para a rota padrão
         */
         $imagem_urn = $request->file('imagem')->store('imagens', 'public');
-
+        $validated['imagem'] = $imagem_urn;
         $marca = $this->marca->create([
                                         'nome' => $validated['nome'],
-                                        'imagem' => $imagem_urn
+                                        'imagem' => $validated['imagem']
                                         ]);
 
         return response($marca,Response::HTTP_CREATED);
@@ -106,10 +106,9 @@ class MarcaController extends Controller
      */
     public function destroy($id)
     {
-        $marca = $this->marca->find($id);
-        if($marca === null){
-            return response(['erro' => 'Impossível realizar a exclusão. O recurso pesquisado não existe'],Response::HTTP_NOT_FOUND);
-        }
+        $marca = $this->marca->findOrFail($id);
+        
+        Storage::disk('public')->delete($marca->imagem);
         $marca->delete();
         return response($marca,Response::HTTP_OK);
     }
