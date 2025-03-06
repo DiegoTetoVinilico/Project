@@ -21,7 +21,7 @@ class StoreMarcaRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'nome' => [ 'required',
                         'min:3',
                         'max:100',
@@ -29,6 +29,7 @@ class StoreMarcaRequest extends FormRequest
                     ],
             'imagem' => 'required|image|mimes:jpeg,png,jpg',
         ];
+        return $rules;
     }
     public function messages(): array
     {
@@ -41,12 +42,5 @@ class StoreMarcaRequest extends FormRequest
             'imagem.image' => 'O arquivo deve ser uma imagem válida',
             'imagem.mimes' => 'A imagem deve ser do tipo: jpeg, png, jpg ou gif',
         ];
-    }
-
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'imagem' => $this->imagem ?? null, // Garante que o campo 'imagem' esteja presente
-        ]);
     }
 }

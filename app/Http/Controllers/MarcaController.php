@@ -78,23 +78,20 @@ class MarcaController extends Controller
      */
     public function update(UpdateMarcaRequest $request, $id)
     {   
-        // Valida os dados da requisição
-        $validated = $request->validated();
-
-    // Encontra a marca pelo ID ou retorna erro 404
+        // Encontra a marca pelo ID ou retorna erro 404
         $marca = $this->marca->findOrFail($id);
+        //dd($request->nome);
+        //dd($request->file('imagem'));
 
+        //Valida os dados da requisição
+        $validated = $request->validated();
+     
     // Verifica se uma nova imagem foi enviada
-    if ($request->hasFile('imagem')) {
+    if ($request->file('imagem')) {
         // Armazena a nova imagem no disco 'public' e obtém o caminho
-        $imagem_urn = $request->file('imagem')->store('imagens', 'public');
-
-        // Remove a imagem antiga (se existir)
-        if ($marca->imagem && Storage::disk('public')->exists($marca->imagem)) {
-            Storage::disk('public')->delete($marca->imagem);
-        }
-
-        // Atualiza o caminho da nova imagem no array de dados validados
+        Storage::disk('public')->delete($marca->imagem);
+        $imagem = $request->file('imagem');
+        $imagem_urn= $imagem->store('imagens', 'public');
         $validated['imagem'] = $imagem_urn;
     }
 

@@ -22,23 +22,27 @@ class UpdateMarcaRequest extends FormRequest
      */
     public function rules(): array
     {  
+        $id = $this->route("marca");
         $rules = [
             'nome' => [
-                'sometimes', // O campo 'nome' é opcional no PATCH
+                'required', // O campo 'nome' é opcional no PATCH
                 'min:3',
                 'max:100',
-                Rule::unique('marcas', 'nome')->ignore($this->id), // Ignora o próprio registro
+                'unique:marcas,nome, ' . $id . '' // Ignora o próprio registro
             ],
-            'imagem' => 'sometimes|image|mimes:jpeg,png,jpg,gif', // O campo 'imagem' é opcional no PATCH
+            'imagem' => 'required|image|mimes:jpeg,png,jpg,gif', // O campo 'imagem' é opcional no PATCH
         ];
-    
-        // Se for uma requisição POST, o campo 'nome' e 'imagem' são obrigatórios
-        if ($this->method() == 'POST') {
-            $rules['nome'][] = 'required';
-            $rules['imagem'][] = 'required';
-        }
-    
+        if ($this->method() == 'PATCH') {
+            $regrasDinamicas = array();
+            foreach ($rules as $input => $regra) {
+                if(array_key_exists($input, $this->request->all())) {
+                    $regrasDinamicas[$input] = $regra;
+                }
+            }
+            return $regrasDinamicas;
+        }else{
         return $rules;
+        }
     }
     public function messages(): array
     {
