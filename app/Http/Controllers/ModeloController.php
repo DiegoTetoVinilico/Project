@@ -44,15 +44,7 @@ class ModeloController extends Controller
         */
         $imagem_urn = $request->file('imagem')->store('imagens/modelos', 'public');
         $validated['imagem'] = $imagem_urn;
-        $modelo = $this->modelo->create([
-                                        'marca_id'=> $validated['marca_id'],
-                                        'nome' => $validated['nome'],
-                                        'imagem' => $validated['imagem'],
-                                        'numero_portas'=> $validated['numero_portas'],
-                                        'lugares'=> $validated['lugares'],
-                                        'air_bag'=> $validated['air_bag'],
-                                        'abs'=> $validated['abs']
-                                        ]);
+        $modelo = $this->modelo->create($validated);
 
         return response($modelo,Response::HTTP_CREATED);
     }

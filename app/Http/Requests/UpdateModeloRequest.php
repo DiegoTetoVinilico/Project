@@ -40,7 +40,10 @@ class UpdateModeloRequest extends FormRequest
                         ],
             'air_bag'=> ['required',
                          'boolean'
-                        ]
+                        ],
+            'abs'=> ['required',
+                         'boolean'
+                    ]
         ];
         if ($this->method() == 'PATCH') {
             $regrasDinamicas = array();
@@ -77,6 +80,8 @@ class UpdateModeloRequest extends FormRequest
 
             'air_bag.required' => 'O campo air bag é obrigatório.',
             'air_bag.boolean' => 'O campo air bag deve ser verdadeiro ou falso.',
+            'abs.required' => 'O campo abs é obrigatório.',
+            'abs.boolean' => 'O campo abs deve ser verdadeiro ou falso.',
         ];
         return $messages;
     }
