@@ -21,7 +21,7 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        $marcas = $this->marca->all();
+        $marcas = $this->marca->with('modelos')->get();
         return response($marcas,Response::HTTP_OK);
     }
 
@@ -60,7 +60,7 @@ class MarcaController extends Controller
      */
     public function show($id)
     {
-        $marca = $this->marca->findOrFail($id);
+        $marca = $this->marca->with('modelos')->findOrFail($id);
 
         return response($marca,Response::HTTP_OK);
     }

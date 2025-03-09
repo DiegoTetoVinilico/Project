@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Modelo;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreModeloRequest;
 use App\Http\Requests\UpdateModeloRequest;
 use \Symfony\Component\HttpFoundation\Response;
@@ -17,10 +18,25 @@ class ModeloController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $modelo = $this->modelo->all();
-        return response($modelo,Response::HTTP_OK);
+    public function index(Request $request)
+    {   
+        $modelos = array();
+        //Verifica se no parametro de busca esxiste atributos_marca
+        if($request->has("atributos_marca")){
+            $atributos_marca = $request->atributos_marca; //recebe os dados do atributos_marca
+            $modelos = $this->modelo->with('marca:id,'.$atributos_marca);
+        }else{
+            $modelos = $this->modelo->with('marca')->get();
+        }
+
+
+        if($request->has("atributos")){
+            $atributos = explode(',', $request->get('atributos'));
+            $modelos = $modelos->select($atributos)->get();
+        }else{
+            $modelos = $modelos->get();
+        } 
+        return response($modelos,Response::HTTP_OK);
     }
 
     /**
@@ -54,7 +70,7 @@ class ModeloController extends Controller
      */
     public function show($id)
     {
-        $modelo = $this->modelo->findOrFail($id);
+        $modelo = $this->modelo->with('marca')->findOrFail($id);
 
         return response($modelo,Response::HTTP_OK);
     }
@@ -89,7 +105,7 @@ class ModeloController extends Controller
         $validated['imagem'] = $imagem_urn;
     }
 
-        // Atualiza a marca no banco de dados
+        // Atualiza a marca no banco de dados após a validação 
         $modelo->update($validated);
     
         return response($modelo,Response::HTTP_OK);
