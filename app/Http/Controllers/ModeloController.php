@@ -26,7 +26,7 @@ class ModeloController extends Controller
             $atributos_marca = $request->atributos_marca; //recebe os dados do atributos_marca
             $modelos = $this->modelo->with('marca:id,'.$atributos_marca);
         }else{
-            $modelos = $this->modelo->with('marca')->get();
+            $modelos = $this->modelo->with('marca');
         }
 
 
