@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Marca;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreMarcaRequest;
 use App\Http\Requests\UpdateMarcaRequest;
 use \Symfony\Component\HttpFoundation\Response;
@@ -19,9 +20,32 @@ class MarcaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $marcas = $this->marca->with('modelos')->get();
+        $marcas = array();
+        //Verifica se no parametro de busca esxiste atributos_marca
+        if($request->has("atributos_modelos")){
+            $atributos_modelos = $request->atributos_modelos; //recebe os dados do atributos_marca
+            $marcas = $this->marca->with('modelos:id,'.$atributos_modelos);
+        }else{
+            $marcas = $this->marca->with('modelos');
+            //.
+        }
+        if($request->has("filtro")){
+            $filtros = explode(';', $request->get('filtro'));
+            foreach($filtros as $key => $condicao){
+                
+                $c = explode(':', $condicao);
+                $marcas = $marcas->where($c[0],$c[1],$c[2]);
+            }
+        }
+
+        if($request->has("atributos")){
+            $atributos = explode(',', $request->get('atributos'));
+            $marcas = $marcas->select($atributos)->get();
+        }else{
+            $marcas = $marcas->get();
+        } 
         return response($marcas,Response::HTTP_OK);
     }
 
