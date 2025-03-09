@@ -27,6 +27,7 @@ class ModeloController extends Controller
             $modelos = $this->modelo->with('marca:id,'.$atributos_marca);
         }else{
             $modelos = $this->modelo->with('marca');
+            //.
         }
 
 
