@@ -8,6 +8,8 @@ use App\Http\Requests\StoreModeloRequest;
 use App\Http\Requests\UpdateModeloRequest;
 use \Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\ModeloRepository;
+
 
 class ModeloController extends Controller
 {   
@@ -20,31 +22,22 @@ class ModeloController extends Controller
      */
     public function index(Request $request)
     {   
-        $modelos = array();
-        //Verifica se no parametro de busca esxiste atributos_marca
+        $modeloRepository = new ModeloRepository($this->modelo);
+        
         if($request->has("atributos_marca")){
-            $atributos_marca = $request->atributos_marca; //recebe os dados do atributos_marca
-            $modelos = $this->modelo->with('marca:id,'.$atributos_marca);
+            $atributos_marca = 'marca:id,'.$request->atributos_marca; //recebe os dados do atributos_marca
+           $modeloRepository->selectAtributosRegistrosRelacionados($atributos_marca);
         }else{
-            $modelos = $this->modelo->with('marca');
-            //.
-        }
-        if($request->has("filtro")){
-            $filtros = explode(';', $request->get('filtro'));
-            foreach($filtros as $key => $condicao){
-                
-                $c = explode(':', $condicao);
-                $modelos = $modelos->where($c[0],$c[1],$c[2]);
-            }
+            $modeloRepository->selectAtributosRegistrosRelacionados('marca');
         }
 
+        if($request->has("filtro")){
+            $modeloRepository->filtro($request->filtro);
+        }
         if($request->has("atributos")){
-            $atributos = explode(',', $request->get('atributos'));
-            $modelos = $modelos->select($atributos)->get();
-        }else{
-            $modelos = $modelos->get();
-        } 
-        return response($modelos,Response::HTTP_OK);
+            $modeloRepository->selectAtributos($request->atributos);
+        }
+        return response($modeloRepository->getResultado(),Response::HTTP_OK);
     }
 
     /**
