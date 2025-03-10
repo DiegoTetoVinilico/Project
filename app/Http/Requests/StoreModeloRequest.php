@@ -26,7 +26,7 @@ class StoreModeloRequest extends FormRequest
             'nome' => [ 'required',
                         'min:3',
                         'max:100',
-                        'unique:marcas'
+                        'unique:modelos'
                     ],
             'imagem' => 'required|image|mimes:jpeg,png,jpg',
             'numero_portas' => ['required',
