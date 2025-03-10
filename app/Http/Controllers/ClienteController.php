@@ -18,7 +18,7 @@ class ClienteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $clienteRepository = new ClienteRepository($this->cliente);
         
