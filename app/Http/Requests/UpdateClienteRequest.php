@@ -11,7 +11,7 @@ class UpdateClienteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -20,9 +20,24 @@ class UpdateClienteRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
+    {   
+        $rules = ['nome'=> 'required'];
+        
+        if ($this->method() == 'PATCH') {
+            $regrasDinamicas = array();
+            foreach ($rules as $input => $regra) {
+                if(array_key_exists($input, $this->request->all())) {
+                    $regrasDinamicas[$input] = $regra;
+                }
+            }
+            return $regrasDinamicas;
+        }else{
+            return $rules;
+        }
+    }
+    public function messages(){
         return [
-            //
+            'nome.required'=> 'O nome é obrigatório'
         ];
     }
 }

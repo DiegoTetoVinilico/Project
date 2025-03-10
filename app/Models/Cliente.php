@@ -9,4 +9,7 @@ class Cliente extends Model
 {
     /** @use HasFactory<\Database\Factories\ClienteFactory> */
     use HasFactory;
+
+    private $fillable = ['nome'];
+
 }

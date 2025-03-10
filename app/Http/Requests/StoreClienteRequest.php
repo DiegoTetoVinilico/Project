@@ -11,7 +11,7 @@ class StoreClienteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -20,9 +20,13 @@ class StoreClienteRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
+    {   
+        $rules = ['nome'=> 'required'];
+        return $rules;
+    }
+    public function messages(){
         return [
-            //
+            'nome.required'=> 'O nome é obrigatório'
         ];
     }
 }
