@@ -11,7 +11,8 @@
         return $this->carro->all()->toArray();
     }
 
-    public function findById(int $id): ?Carro
+
+    public function findById(int $id):Carro|null
     {
         return $this->carro->find($id);
     }

@@ -38,6 +38,8 @@ class CarroController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
+        $carro = $this->service->getById($id);
+
         return $this->service->delete($id) 
             ? response()->json(['message' => 'Carro excluído com sucesso']) 
             : response()->json(['error' => 'Carro não encontrado'], 404);

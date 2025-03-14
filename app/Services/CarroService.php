@@ -11,7 +11,14 @@ class CarroService
 
     public function getAll(): array
     {
-        return array_map(fn($carro) => CarroDTO::fromArray($carro), $this->repository->findAll());
+        $carros = $this->repository->findAll();
+        $dtos = [];
+
+        foreach ($carros as $carro) {
+        $dtos[] = CarroDTO::fromArray($carro);
+    }
+
+    return $dtos;
     }
 
     public function getById(int $id): ?CarroDTO
